@@ -10,7 +10,7 @@ class Product:
         self.quantity = quantity
         self.active = quantity > 0
 
-    @staticmethod
+   
     def validate_product_details(name, price):
         if not name:
             raise ValueError("Product name cannot be empty")
