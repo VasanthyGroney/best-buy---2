@@ -1,5 +1,3 @@
-
-
 class Product:
     def __init__(self, name, price, quantity):
         self.name = name
@@ -22,21 +20,28 @@ class Product:
     def set_quantity(self, quantity):
         self.quantity = quantity
 
-bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
-mac = Product("MacBook Air M2", price=1450, quantity=100)
+class NonStockedProduct(Product):
+    def __init__(self, name, price):
+        super().__init__(name, price, 0)
 
-print(bose.buy(50))
-print(mac.buy(100))
-print(mac.is_active())
+    def buy(self, amount):
+        return f"{amount} units of {self.name} bought. Unlimited quantity available."
 
-bose.show()
-mac.show()
+    def is_active(self):
+        return True
 
-bose.set_quantity(1000)
-bose.show()
+    def set_quantity(self, quantity):
+        pass  # Do nothing, quantity should always stay zero
 
+    def show(self):
+        print(f"Product: {self.name}, Price: ${self.price}, Quantity: Unlimited")
 
-product_list = [Product("MacBook Air M2", price=1450, quantity=100),
-                Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                Product("Google Pixel 7", price=500, quantity=250),
-                ]
+class LimitedProduct(Product):
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def buy(self, amount):
+        if amount > self.maximum:
+            return f"Cannot buy more than {self.maximum} units of {self.name} at a time."
+        return super().buy(amount)

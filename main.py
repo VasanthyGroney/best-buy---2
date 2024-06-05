@@ -1,7 +1,5 @@
-# main.py
-
 from store import Store
-from products import Product
+from products import Product, NonStockedProduct, LimitedProduct
 
 def start(store):
     while True:
@@ -59,10 +57,13 @@ def start(store):
             print("Invalid choice! Try again.")
 
 if __name__ == "__main__":
+    # setup initial stock of inventory
     product_list = [
-        Product("MacBook Air M2", 1450, 100),
-        Product("Bose QuietComfort Earbuds", 250, 500),
-        Product("Google Pixel 7", 500, 250),
+        Product("MacBook Air M2", price=1450, quantity=100),
+        Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        Product("Google Pixel 7", price=500, quantity=250),
+        NonStockedProduct("Windows License", price=125),
+        LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
     ]
-    store = Store(product_list)
-    start(store)
+    best_buy = Store(product_list)
+    start(best_buy)

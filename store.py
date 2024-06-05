@@ -1,29 +1,48 @@
-import pytest
 from products import Product
 
-def test_create_normal_product():
-    product = Product("MacBook Air M2", price=1450, quantity=100)
-    assert product.name == "MacBook Air M2"
-    assert product.price == 1450
-    assert product.quantity == 100
 
-def test_create_product_with_invalid_details():
-    with pytest.raises(ValueError):
-        Product("", price=1450, quantity=100)  # Empty name
-    with pytest.raises(ValueError):
-        Product("MacBook Air M2", price=-10, quantity=100)  # Negative price
+class Store:
+    def __init__(self, products=None):
+        if products is None:
+            self.products = []
+        else:
+            self.products = products
 
-def test_product_becomes_inactive_when_quantity_zero():
-    product = Product("MacBook Air M2", price=1450, quantity=0)
-    assert not product.is_active()
+    def add_product(self, product):
+        self.products.append(product)
+        print(f"Product {product.name} is added")
 
-def test_product_purchase_modifies_quantity_and_returns_correct_output():
-    product = Product("MacBook Air M2", price=1450, quantity=100)
-    total_price = product.buy(5)
-    assert total_price == 1450 * 5
-    assert product.quantity == 95
+    def remove_product(self, product):
+        if product in self.products:
+            self.products.remove(product)
+            print(f"Product {product.name} removed from store.")
+        else:
+            print(f"Product {product.name} not available")
 
-def test_purchase_larger_quantity_than_exists():
-    product = Product("MacBook Air M2", price=1450, quantity=100)
-    with pytest.raises(ValueError):
-        product.buy(150)
+    def get_total_quantity(self):
+        total_quantity = sum(product.quantity for product in self.products)
+        return total_quantity
+
+    def get_all_products(self):
+        list_products = list(self.products)
+        return list_products
+
+    def order(self, shopping_list) -> float:
+        total_price = 0.0
+        for product, quantity in shopping_list:
+            if quantity > 0:
+                if product.quantity >= quantity:
+                    product_total = product.price * quantity  # Calculate cost
+                    total_price += product_total
+                    product.quantity -= quantity  # Decrease the stock
+                else:
+                    print(f"Not enough stock for {product.name}. Only {product.quantity} available.")
+                    continue
+        return total_price
+
+
+
+
+
+
+
